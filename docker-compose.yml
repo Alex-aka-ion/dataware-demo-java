@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: catalog_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+#  build:
+#    image: maven:3.8.6-openjdk-23-slim
+#    container_name: maven_build
+#    volumes:
+#      - ./:/app
+#    working_dir: /app
+#    command: mvn clean package
+#    depends_on:
+#      - postgres
+#
+#  productService:
+#    image: openjdk:23-jdk-slim
+#    container_name: product_service
+#    volumes:
+#      - ./productService/target/productService-*.jar:/app/productService.jar
+#    command: ["java", "-jar", "/app/productService.jar"]
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
+#      SPRING_DATASOURCE_USERNAME: user
+#      SPRING_DATASOURCE_PASSWORD: password
+#    ports:
+#      - "8081:8080"
+#    depends_on:
+#      - postgres
+#      - build
+#
+#  orderService:
+#    image: openjdk:23-jdk-slim
+#    container_name: order_service
+#    volumes:
+#      - ./orderService/target/orderService-*.jar:/app/orderService.jar
+#    command: ["java", "-jar", "/app/orderService.jar"]
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
+#      SPRING_DATASOURCE_USERNAME: user
+#      SPRING_DATASOURCE_PASSWORD: password
+#    ports:
+#      - "8082:8080"
+#    depends_on:
+#      - postgres
+#      - build
+#
+#  apiGateway:
+#    image: openjdk:23-jdk-slim
+#    container_name: api_gateway
+#    volumes:
+#      - ./apiGateway/target/apiGateway-*.jar:/app/apiGateway.jar
+#    command: ["java", "-jar", "/app/apiGateway.jar"]
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - productService
+#      - orderService
+#      - build
+
+volumes:
+  postgres_data:
