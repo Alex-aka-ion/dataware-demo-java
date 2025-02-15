@@ -4,8 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.util.UUID;
-
 /**
  * Класс `OrderItemRequest` представляет данные для добавления товара в заказ.
  * Этот DTO используется для передачи данных при создании или обновлении заказа,

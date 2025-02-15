@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -130,7 +131,6 @@ public class OrderController {
     /**
      * Найти заказы по ID продукта.
      *
-     * @param productId Идентификатор продукта, передаваемый в запросе.
      * @return ResponseEntity Список найденных заказов или ошибка.
      */
     @Operation(summary = "Найти заказы по ID товара")
@@ -138,8 +138,7 @@ public class OrderController {
     @ApiResponse(responseCode = "400", description = "Некорректный запрос")
     @ApiResponse(responseCode = "404", description = "Заказы не найдены")
     @GetMapping("/search")
-    public ResponseEntity<?> searchByProductId(
-            @RequestParam(name = "productId") String productId) {
+    public ResponseEntity<?> searchByProductId(@RequestParam(name = "productId") @NotNull String productId) {
 
         List<Order> orders = orderRepository.findByProductId(UUID.fromString(productId));
 
@@ -148,7 +147,6 @@ public class OrderController {
         }
         return ResponseEntity.ok(orders);
     }
-
 
     /**
      * Получить заказ по его ID.
