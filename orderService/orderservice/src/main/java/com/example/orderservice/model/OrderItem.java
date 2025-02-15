@@ -1,5 +1,6 @@
 package com.example.orderservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -40,13 +41,14 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(name = "fk_order_item_order", value = ConstraintMode.CONSTRAINT))
     @Schema(description = "Связанный заказ")
+    @JsonIgnore
     private Order order;
 
     /**
      * UUID идентификатор товара.
      */
     @Column(nullable = false)
-    @NotBlank(message = "Идентификатор товара обязателен")
+    @NotNull(message = "Идентификатор товара обязателен")
     @Schema(description = "UUID идентификатор товара", example = "123e4567-e89b-12d3-a456-426614174001")
     private UUID productId;
 

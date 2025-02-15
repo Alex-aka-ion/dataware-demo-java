@@ -22,7 +22,6 @@ public class SearchByProductIdRequest {
 
     /**
      * UUID идентификатор продукта.
-     *
      * Обязательный параметр для поиска заказов. Должен быть строкой в формате UUID.
      */
     @NotNull(message = "Параметр productId обязателен.")

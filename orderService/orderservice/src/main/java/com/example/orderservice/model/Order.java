@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,9 +51,10 @@ public class Order {
      */
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Valid // Валидируем вложенные объекты OrderItem
+    @Builder.Default
     @Schema(description = "Список товаров в заказе",
             example = "[{ \"productId\": \"123e4567-e89b-12d3-a456-426614174001\", \"quantity\": 2, \"price\": 1500.00 }]")
-    private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     /**
      * Дата и время создания заказа.
