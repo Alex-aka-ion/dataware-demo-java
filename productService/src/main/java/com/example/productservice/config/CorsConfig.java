@@ -16,6 +16,7 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
+        //config.setAllowedOrigins(List.of("http://api-gateway")); // Разрешаем API Gateway
         config.setAllowedOrigins(List.of("http://localhost:8090")); // Разрешаем API Gateway
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));

@@ -3,17 +3,19 @@ server:
 
 spring:
   application:
-    name: api-gateway
+    name: apiGateway
 
   cloud:
     gateway:
       routes:
         - id: product-service
+#          uri: http://product-service
           uri: http://localhost:8081
           predicates:
             - Path=/api/products/**
 
         - id: order-service
+#          uri: http://order-service
           uri: http://localhost:8082
           predicates:
             - Path=/api/orders/**
@@ -24,6 +26,8 @@ springdoc:
   swagger-ui:
     urls:
       - name: Product Service
+#        url: http://product-service/v3/api-docs
         url: http://localhost:8081/v3/api-docs
       - name: Order Service
+#        url: http://order-service/v3/api-docs
         url: http://localhost:8082/v3/api-docs

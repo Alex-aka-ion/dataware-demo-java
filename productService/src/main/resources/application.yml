@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: productService
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/catalog_db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.sql
+    liquibase-schema: public
+    database-change-log-table: product_service_changelog
+    database-change-log-lock-table: product_service_changelog_lock
+
+server:
+  port: 8081
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
