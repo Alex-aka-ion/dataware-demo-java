@@ -17,3 +17,13 @@ spring:
           uri: http://localhost:8082
           predicates:
             - Path=/api/orders/**
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    urls:
+      - name: Product Service
+        url: http://localhost:8081/v3/api-docs
+      - name: Order Service
+        url: http://localhost:8082/v3/api-docs
