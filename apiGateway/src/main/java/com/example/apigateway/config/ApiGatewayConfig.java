@@ -12,9 +12,11 @@ public class ApiGatewayConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("product-service", r -> r.path("/api/products/**")
-                        .uri("http://localhost:8081"))
+                       // .uri("http://localhost:8081"))
+                        .uri("http://product-service:8081"))
                 .route("order-service", r -> r.path("/api/orders/**")
-                        .uri("http://localhost:8082"))
+                      //  .uri("http://localhost:8082"))
+                        .uri("http://order-service:8082"))
                 .build();
     }
 }

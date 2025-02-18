@@ -76,8 +76,8 @@ public class OrderController {
                 .build();
 
         RestTemplate restTemplate = new RestTemplate();
-        //String productServiceUrl = "http://product-service/api/products/"; // URL для запроса продукта по ID
-        String productServiceUrl = "http://localhost:8081/api/products/"; // URL для запроса продукта по ID
+        String productServiceUrl = "http://product-service:8081/api/products/"; // URL для запроса продукта по ID
+        //String productServiceUrl = "http://localhost:8081/api/products/"; // URL для запроса продукта по ID
 
         for (OrderItemRequest itemRequest : orderRequest.getProducts()) {
             UUID productId = UUID.fromString(itemRequest.getProductId());

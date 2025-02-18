@@ -13,60 +13,83 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-#  build:
-#    image: maven:3.8.6-openjdk-23-slim
-#    container_name: maven_build
-#    volumes:
-#      - ./:/app
-#    working_dir: /app
-#    command: mvn clean package
-#    depends_on:
-#      - postgres
-#
-#  productService:
-#    image: openjdk:23-jdk-slim
-#    container_name: product_service
-#    volumes:
-#      - ./productService/target/productService-*.jar:/app/productService.jar
-#    command: ["java", "-jar", "/app/productService.jar"]
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
-#      SPRING_DATASOURCE_USERNAME: user
-#      SPRING_DATASOURCE_PASSWORD: password
-#    ports:
-#      - "8081:8080"
-#    depends_on:
-#      - postgres
-#      - build
-#
-#  orderService:
-#    image: openjdk:23-jdk-slim
-#    container_name: order_service
-#    volumes:
-#      - ./orderService/target/orderService-*.jar:/app/orderService.jar
-#    command: ["java", "-jar", "/app/orderService.jar"]
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
-#      SPRING_DATASOURCE_USERNAME: user
-#      SPRING_DATASOURCE_PASSWORD: password
-#    ports:
-#      - "8082:8080"
-#    depends_on:
-#      - postgres
-#      - build
-#
-#  apiGateway:
-#    image: openjdk:23-jdk-slim
-#    container_name: api_gateway
-#    volumes:
-#      - ./apiGateway/target/apiGateway-*.jar:/app/apiGateway.jar
-#    command: ["java", "-jar", "/app/apiGateway.jar"]
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - productService
-#      - orderService
-#      - build
+  # Сервис для сборки productService
+  productServiceBuild:
+    image: openjdk:23-slim
+    container_name: product_service_build
+    volumes:
+      - ./productService:/app  # Монтируем каталог productService
+    working_dir: /app  # Устанавливаем рабочую директорию
+    command: bash -c "apt-get update && apt-get install -y maven && mvn clean package"  # Сборка productService
+    depends_on:
+      - postgres
+
+  # Сервис для сборки orderService
+  orderServiceBuild:
+    image: openjdk:23-slim
+    container_name: order_service_build
+    volumes:
+      - ./orderService:/app  # Монтируем каталог orderService
+    working_dir: /app  # Устанавливаем рабочую директорию
+    command: bash -c "apt-get update && apt-get install -y maven && mvn clean package"  # Сборка orderService
+    depends_on:
+      - postgres
+
+  # Сервис для сборки apiGateway
+  apiGatewayBuild:
+    image: openjdk:23-slim
+    container_name: api_gateway_build
+    volumes:
+      - ./apiGateway:/app  # Монтируем каталог apiGateway
+    working_dir: /app  # Устанавливаем рабочую директорию
+    command: bash -c "apt-get update && apt-get install -y maven && mvn clean package"  # Сборка apiGateway
+    depends_on:
+      - postgres
+
+  productService:
+    image: openjdk:23-jdk-slim
+    container_name: product_service
+    volumes:
+      - ./productService/target/productService-*.jar:/app/productService.jar
+    command: ["java", "-jar", "/app/productService.jar"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+      - productServiceBuild  # Зависимость от сборки productService
+
+  orderService:
+    image: openjdk:23-jdk-slim
+    container_name: order_service
+    volumes:
+      - ./orderService/target/orderService-*.jar:/app/orderService.jar
+    command: ["java", "-jar", "/app/orderService.jar"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+      - orderServiceBuild  # Зависимость от сборки orderService
+
+  apiGateway:
+    image: openjdk:23-jdk-slim
+    container_name: api_gateway
+    volumes:
+      - ./apiGateway/target/apiGateway-*.jar:/app/apiGateway.jar
+    command: ["java", "-jar", "/app/apiGateway.jar"]
+    ports:
+      - "8090:8090"
+    depends_on:
+      - productService
+      - orderService
+      - apiGatewayBuild  # Зависимость от сборки apiGateway
 
 volumes:
   postgres_data:
