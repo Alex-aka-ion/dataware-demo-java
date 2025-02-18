@@ -26,8 +26,8 @@ springdoc:
   swagger-ui:
     urls:
       - name: Product Service
-        url: http://product-service:8081/v3/api-docs
-#        url: http://localhost:8081/v3/api-docs
+#        url: http://product-service:8081/v3/api-docs
+        url: http://localhost:8081/v3/api-docs
       - name: Order Service
-        url: http://order-service:8082/v3/api-docs
-#        url: http://localhost:8082/v3/api-docs
+#        url: http://order-service:8082/v3/api-docs
+        url: http://localhost:8082/v3/api-docs
