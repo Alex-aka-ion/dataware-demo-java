@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15
@@ -20,9 +18,9 @@ services:
     image: openjdk:23-slim
     container_name: product_service_build
     volumes:
-      - ./productService:/app  # Монтируем каталог productService
-    working_dir: /app  # Устанавливаем рабочую директорию
-    command: bash -c "apt-get update && apt-get install -y maven && mvn clean package"  # Сборка productService
+      - ./productService:/app
+    working_dir: /app
+    command: bash -c "mkdir /app/target && apt-get update && apt-get install -y maven && mvn clean package"
     depends_on:
       - postgres
     networks:
@@ -33,9 +31,9 @@ services:
     image: openjdk:23-slim
     container_name: order_service_build
     volumes:
-      - ./orderService:/app  # Монтируем каталог orderService
-    working_dir: /app  # Устанавливаем рабочую директорию
-    command: bash -c "apt-get update && apt-get install -y maven && mvn clean package"  # Сборка orderService
+      - ./orderService:/app
+    working_dir: /app
+    command: bash -c "apt-get update && apt-get install -y maven && mvn clean package"
     depends_on:
       - postgres
     networks:
@@ -46,9 +44,9 @@ services:
     image: openjdk:23-slim
     container_name: api_gateway_build
     volumes:
-      - ./apiGateway:/app  # Монтируем каталог apiGateway
-    working_dir: /app  # Устанавливаем рабочую директорию
-    command: bash -c "apt-get update && apt-get install -y maven && mvn clean package"  # Сборка apiGateway
+      - ./apiGateway:/app
+    working_dir: /app
+    command: bash -c "apt-get update && apt-get install -y maven && mvn clean package"
     depends_on:
       - postgres
     networks:
@@ -58,17 +56,17 @@ services:
     image: openjdk:23-jdk-slim
     container_name: product-service
     volumes:
-      - ./productService/target/productService-0.0.1-SNAPSHOT.jar:/app/productService.jar
-    command: ["sh", "-c", "until [ -f /app/productService.jar ]; do echo 'Waiting for productService.jar'; sleep 2; done; java -jar /app/productService.jar"]
+      - ./productService/:/app/
+    command: ["sh", "-c", "until [ -f /app/target/productService-0.0.1-SNAPSHOT.jar ]; do echo 'Waiting for productService-0.0.1-SNAPSHOT.jar'; sleep 10; done; java -jar /app/target/productService-0.0.1-SNAPSHOT.jar"]
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/catalog_db
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
     ports:
       - "8081:8081"
     depends_on:
       - postgres
-      - productServiceBuild  # Зависимость от сборки productService
+      - productServiceBuild
     networks:
       - gateway-network
 
@@ -76,17 +74,17 @@ services:
     image: openjdk:23-jdk-slim
     container_name: order-service
     volumes:
-      - ./orderService/target/orderService-0.0.1-SNAPSHOT.jar:/app/orderService.jar
-    command: ["sh", "-c", "until [ -f /app/orderService.jar ]; do echo 'Waiting for orderService.jar'; sleep 2; done; java -jar /app/orderService.jar"]
+      - ./orderService/:/app/
+    command: ["sh", "-c", "until [ -f /app/target/orderService-0.0.1-SNAPSHOT.jar ]; do echo 'Waiting for orderService-0.0.1-SNAPSHOT.jar'; sleep 10; done; java -jar /app/target/orderService-0.0.1-SNAPSHOT.jar"]
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/catalog_db
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
     ports:
       - "8082:8082"
     depends_on:
       - postgres
-      - orderServiceBuild  # Зависимость от сборки orderService
+      - orderServiceBuild
     networks:
       - gateway-network
 
@@ -94,14 +92,14 @@ services:
     image: openjdk:23-jdk-slim
     container_name: api-gateway
     volumes:
-      - ./apiGateway/target/apiGateway-0.0.1-SNAPSHOT.jar:/app/apiGateway.jar
-    command: ["sh", "-c", "until [ -f /app/apiGateway.jar ]; do echo 'Waiting for apiGateway.jar'; sleep 2; done; java -jar /app/apiGateway.jar"]
+      - ./apiGateway/:/app/
+    command: ["sh", "-c", "until [ -f /app/target/apiGateway-0.0.1-SNAPSHOT.jar ]; do echo 'Waiting for apiGateway-0.0.1-SNAPSHOT.jar'; sleep 10; done; java -jar /app/target/apiGateway-0.0.1-SNAPSHOT.jar"]
     ports:
       - "8090:8090"
     depends_on:
       - productService
       - orderService
-      - apiGatewayBuild  # Зависимость от сборки apiGateway
+      - apiGatewayBuild
     networks:
       - gateway-network
 
