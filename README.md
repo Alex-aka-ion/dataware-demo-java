@@ -44,7 +44,7 @@
 
 3. Запустите проект с помощью Docker Compose:
     ```bash
-    docker-compose up --build
+    docker compose up --build
     ```
 
 4. После запуска проект будет доступен по следующим адресам:
